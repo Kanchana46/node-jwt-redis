@@ -3,9 +3,9 @@ POST http://localhost:3000/user/register
 Content-Type: application/json
 
 {
-    "first_name": "Sara",
-    "last_name": "Gwen",
-    "email": "saragwen@t.com",
+    "first_name": "Anna",
+    "last_name": "Lora",
+    "email": "annalora@t.com",
     "password": "1234"
 }
 
@@ -15,14 +15,14 @@ POST http://localhost:3000/user/login
 Content-Type: application/json
 
 {
-    "email": "saragwen@t.com",
+    "email": "annalora@t.com",
     "password": "1234"
 }
 
 ###
 
 GET http://localhost:3000/user/doSomeWork
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWFkYjE5NTRhYjQ4YzNhNGNjNDY4YzIiLCJpYXQiOjE2Mzg5NTU5NDcsImV4cCI6MTYzODk1NTk3N30.1mi5J-muZPKcvm4sGn9lplcSGeqr5Em51CeJh4hHKVQ
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWIyZThjZGIzNzlmOTI3OTgyODM0ZGIiLCJpYXQiOjE2MzkxMTUwNjksImV4cCI6MTYzOTExNTA5OX0.2BZu1eH7Ahmm4wi6AyofR13AIbq82gVH2UrXUv5jQ2M
 Content-Type: application/json
 
 ###
@@ -30,7 +30,7 @@ POST http://localhost:3000/user/refreshToken
 Content-Type: application/json
 
 {
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWFkYjE5NTRhYjQ4YzNhNGNjNDY4YzIiLCJpYXQiOjE2Mzg5NTU5NDcsImV4cCI6MTY0MTU0Nzk0N30.aabOdAlLM9RzlwL3AmDs9OSdDoh9FtT-6NkyObItFgI"
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWIyZThjZGIzNzlmOTI3OTgyODM0ZGIiLCJpYXQiOjE2MzkxMTUwNjksImV4cCI6MTY0MTcwNzA2OX0.XzBnjwV3tZZGCEOLaYK2mNRwt3Lr4KeITdC_4O3-Nus"
 }
 
 
@@ -40,5 +40,5 @@ POST http://localhost:3000/user/logout
 Content-Type: application/json
 
 {
-    "userId": "61adb1954ab48c3a4cc468c2"
+    "userId": "61b2e8cdb379f927982834db"
 }

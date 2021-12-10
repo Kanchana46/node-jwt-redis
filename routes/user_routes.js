@@ -2,13 +2,20 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const auth = require("../middleware/auth");
-//const client = require("../util/redis");
+
 const jwtHelper = require("../util/jwt_helper");
 
 const User = require("../model/user_model");
 const UserToken = require("../model/userToken_model");
 
+let client;
 
+async function redis() {
+    const redis_client = await require("../util/redis");
+    client = redis_client;
+}
+
+redis()
 
 router.post('/register', async (req, res) => {
     try {
@@ -52,9 +59,8 @@ router.post('/login', async (req, res) => {
                     refreshToken: refToken,
                     createdAt: new Date()
                 })
-
-
-
+                let uid = `${user._id}`
+                await client.setEx(uid, 30 * 24 * 60 * 60, refToken);
 
                 res.status(200).json({
                     userId: user._id,
@@ -79,22 +85,14 @@ router.get('/doSomeWork', auth, (req, res) => {
 router.post('/refreshToken', async (req, res) => {
     try {
         const payload = await jwtHelper.verifyRefreshToken(req.body.refreshToken);
-        const token_object = await UserToken.find({ userId: payload.userId }).sort({ createdAt: -1 }).limit(1);
-        if (token_object.length == 0) {
+        const refTokenRedis = await client.get(payload.userId);
+        console.log('val', refTokenRedis)
+        if (refTokenRedis == null) {
             res.send("Refresh token does not exist")
         } else {
-            const refreshToken = token_object[0].refreshToken;
-            if (refreshToken == req.body.refreshToken) {
-                const token = await jwtHelper.generateAccessToken(payload.userId);
-                const refToken = await jwtHelper.generateRefreshToken(payload.userId);
-                await UserToken.findOneAndUpdate({ _id: token_object[0]._id }, { $set: { refreshToken: refToken } }, { useFindAndModify: false });
-                res.json({ token: token, refreshToken: refToken })
-            } else {
-                res.send("Old refresh token")
-            }
-            client.get(payload.userId, (err, data) => {
-                console.log(data)
-            });
+            const token = await jwtHelper.generateAccessToken(payload.userId);
+            const refToken = await jwtHelper.generateRefreshToken(payload.userId);
+            res.json({ token: token, refreshToken: refToken })
         }
     } catch (err) {
         res.send(err)
@@ -103,7 +101,8 @@ router.post('/refreshToken', async (req, res) => {
 
 router.post('/logout', async (req, res) => {
     try {
-        const deleted = await UserToken.findOneAndRemove({ userId: req.body.userId })
+        const deleted = await client.del(req.body.userId)
+        //const deleted = await UserToken.findOneAndRemove({ userId: req.body.userId })
         console.log(deleted)
     } catch (err) {
         console.log(err)
